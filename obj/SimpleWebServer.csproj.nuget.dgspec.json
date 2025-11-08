@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Claudia\\Desktop\\SimpleWebServer\\SimpleWebServer.csproj": {}
+    "C:\\Proyectos\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Claudia\\Desktop\\SimpleWebServer\\SimpleWebServer.csproj": {
+    "C:\\Proyectos\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Claudia\\Desktop\\SimpleWebServer\\SimpleWebServer.csproj",
+        "projectUniqueName": "C:\\Proyectos\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj",
         "projectName": "SimpleWebServer",
-        "projectPath": "C:\\Users\\Claudia\\Desktop\\SimpleWebServer\\SimpleWebServer.csproj",
+        "projectPath": "C:\\Proyectos\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj",
         "packagesPath": "C:\\Users\\Claudia\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Claudia\\Desktop\\SimpleWebServer\\obj\\",
+        "outputPath": "C:\\Proyectos\\TP-Programacion-sobre-redes\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Claudia\\AppData\\Roaming\\NuGet\\NuGet.Config"
