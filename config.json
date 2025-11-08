@@ -1,0 +1,7 @@
+{
+  "port": 8080,
+  "host": "localhost",
+  "wwwroot": "wwwroot",
+  "welcomeFile": "index.html"
+}
+

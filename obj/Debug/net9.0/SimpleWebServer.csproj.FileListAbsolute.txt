@@ -1,0 +1,14 @@
+C:\Users\Claudia\Desktop\SimpleWebServer\bin\Debug\net9.0\SimpleWebServer.exe
+C:\Users\Claudia\Desktop\SimpleWebServer\bin\Debug\net9.0\SimpleWebServer.deps.json
+C:\Users\Claudia\Desktop\SimpleWebServer\bin\Debug\net9.0\SimpleWebServer.runtimeconfig.json
+C:\Users\Claudia\Desktop\SimpleWebServer\bin\Debug\net9.0\SimpleWebServer.dll
+C:\Users\Claudia\Desktop\SimpleWebServer\bin\Debug\net9.0\SimpleWebServer.pdb
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.AssemblyInfoInputs.cache
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.AssemblyInfo.cs
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.csproj.CoreCompileInputs.cache
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.dll
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\refint\SimpleWebServer.dll
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.pdb
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\SimpleWebServer.genruntimeconfig.cache
+C:\Users\Claudia\Desktop\SimpleWebServer\obj\Debug\net9.0\ref\SimpleWebServer.dll
