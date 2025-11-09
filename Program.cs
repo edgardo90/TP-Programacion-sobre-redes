@@ -2,6 +2,10 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+//compresion gzip
+using System.IO.Compression;
+
+
 
 // --- Función de logging ---
 void LogRequest(string clientIp, string method, string path, string body = "")
@@ -16,6 +20,34 @@ void LogRequest(string clientIp, string method, string path, string body = "")
 
     File.AppendAllText(logFile, logLine);
 }
+
+//Detectar si el navegador soporta compresión
+byte[] CompressGzip(byte[] data)
+{
+    using (var output = new MemoryStream())
+    {
+        using (var gzip = new GZipStream(output, CompressionLevel.SmallestSize, leaveOpen: true))
+        {
+            gzip.Write(data, 0, data.Length);
+        }
+        return output.ToArray();
+    }
+}
+
+//funcion para crear zip 
+byte[] CreateZip(string filePath)
+{
+    using (var mem = new MemoryStream())
+    {
+        using (var zip = new ZipArchive(mem, ZipArchiveMode.Create, true))
+        {
+            zip.CreateEntryFromFile(filePath, Path.GetFileName(filePath));
+        }
+        return mem.ToArray();
+    }
+}
+
+
 
 // --- Código principal ---
 // 1. Leer el archivo de configuración
@@ -84,60 +116,131 @@ while (true)
     string filePath = Path.Combine(wwwroot, path.TrimStart('/'));
     string clientIp = ((IPEndPoint)client.Client.RemoteEndPoint!).Address.ToString();
 
+
     if (method == "GET")
-{
-    // Separar path y query string
-    string pathOnly = path;
-    string query = "";
-    int qIndex = path.IndexOf('?');
-    if (qIndex >= 0)
     {
-        pathOnly = path.Substring(0, qIndex);
-        query = path.Substring(qIndex + 1);
-    }
+        // Detectar si el navegador acepta gzip
+        bool aceptaGzip = requestText.Contains("Accept-Encoding: gzip");
 
-    // Si no se pidió archivo, usar el archivo de bienvenida
-    if (pathOnly == "/")
-        pathOnly = "/" + welcomeFile;
+        // Separar path y query string
+        string pathOnly = path;
+        string query = "";
+        int qIndex = path.IndexOf('?');
+        if (qIndex >= 0)
+        {
+            pathOnly = path.Substring(0, qIndex);
+            query = path.Substring(qIndex + 1);
+        }
 
-    // Crear ruta absoluta al archivo solicitado
-    string filePath = Path.Combine(wwwroot, pathOnly.TrimStart('/'));
+        // Si no se pidió archivo, usar el archivo de bienvenida
+        if (pathOnly == "/")
+            pathOnly = "/" + welcomeFile;
 
-    // Log de GET básico
-    LogRequest(clientIp, method, pathOnly);
+        // Crear ruta absoluta al archivo solicitado
+        string requestedFile = Path.Combine(wwwroot, pathOnly.TrimStart('/'));
 
-    // Log de query si existe
-    if (!string.IsNullOrEmpty(query))
-        LogRequest(clientIp, method, pathOnly, "Query: " + query);
+        // Log de GET básico
+        LogRequest(clientIp, method, pathOnly);
 
-    if (File.Exists(filePath))
-    {
-        byte[] body = File.ReadAllBytes(filePath);
-        string contentType = GetContentType(filePath);
+        // Log de query si existe
+        if (!string.IsNullOrEmpty(query))
+            LogRequest(clientIp, method, pathOnly, "Query: " + query);
+        // 👉 Si piden descargar TODO el sitio en ZIP
+        if (query.Contains("download=sitezip", StringComparison.OrdinalIgnoreCase))
+        {
+            string folderToZip = wwwroot; // ✅ Solo la carpeta wwwroot
+            string zipPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot.zip");
 
-        string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
-        stream.Write(Encoding.UTF8.GetBytes(header));
-        stream.Write(body);
-    }
-    else
-    {
-        // Log de GET fallido
-        LogRequest(clientIp, method, pathOnly, "Archivo no encontrado");
+            // Si ya existe, lo borramos para generar uno nuevo
+            if (File.Exists(zipPath))
+                File.Delete(zipPath);
 
-        string notFoundPath = Path.Combine(wwwroot, "404.html");
-        byte[] body;
+            // Crear ZIP (requiere using System.IO.Compression)
+            ZipFile.CreateFromDirectory(folderToZip, zipPath);
 
-        if (File.Exists(notFoundPath))
-            body = File.ReadAllBytes(notFoundPath);
+            byte[] zipBytes = File.ReadAllBytes(zipPath);
+
+            string header =
+                $"HTTP/1.1 200 OK\r\n" +
+                $"Content-Type: application/zip\r\n" +
+                $"Content-Disposition: attachment; filename=\"wwwroot.zip\"\r\n" +
+                $"Content-Length: {zipBytes.Length}\r\n\r\n";
+
+
+            stream.Write(Encoding.UTF8.GetBytes(header));
+            stream.Write(zipBytes);
+
+            stream.Flush();
+            client.Close();
+            continue; // ✅ IMPORTANTE
+        }
+
+        if (File.Exists(requestedFile))
+        {
+            byte[] body = File.ReadAllBytes(requestedFile);
+            string contentType = GetContentType(requestedFile);
+
+            bool descargaZip = query.Contains("download=zip", StringComparison.OrdinalIgnoreCase);
+            bool descargaGzip = query.Contains("download=gzip", StringComparison.OrdinalIgnoreCase);
+
+
+            // Si el cliente acepta GZIP → comprimimos
+            if (aceptaGzip && !descargaGzip)
+            {
+                // Modo normal → Comprimir solo si el navegador lo acepta
+                body = CompressGzip(body);
+                string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Encoding: gzip\r\nContent-Length: {body.Length}\r\n\r\n";
+                stream.Write(Encoding.UTF8.GetBytes(header));
+                stream.Write(body);
+            }
+            else if (descargaGzip)
+            {
+                // Modo descarga forzada en GZIP
+                byte[] gz = CompressGzip(body);
+
+               
+                string header =
+                    $"HTTP/1.1 200 OK\r\n" +
+                    $"Content-Type: application/gzip\r\n" +
+                    $"Content-Disposition: attachment; filename=\"{Path.GetFileName(requestedFile)}.gz\"\r\n" +
+                    $"Content-Length: {gz.Length}\r\n\r\n";
+
+
+                stream.Write(Encoding.UTF8.GetBytes(header));
+                stream.Write(gz);
+
+                stream.Flush();
+                client.Close();
+                continue;   // 👈 MUY IMPORTANTE
+            }
+            else
+            {
+                // Normal sin compresión
+                string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
+                stream.Write(Encoding.UTF8.GetBytes(header));
+                stream.Write(body);
+            }
+        }
         else
-            body = Encoding.UTF8.GetBytes("<h1>404 - Archivo no encontrado</h1>");
+        {
+            // Log de GET fallido
+            LogRequest(clientIp, method, pathOnly, "Archivo no encontrado");
 
-        string contentType = GetContentType("404.html");
-        string header = $"HTTP/1.1 404 Not Found\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
-        stream.Write(Encoding.UTF8.GetBytes(header));
-        stream.Write(body);
-    }
-}
+            string notFoundPath = Path.Combine(wwwroot, "404.html");
+            byte[] body;
+
+            if (File.Exists(notFoundPath))
+                body = File.ReadAllBytes(notFoundPath);
+            else
+                body = Encoding.UTF8.GetBytes("<h1>404 - Archivo no encontrado</h1>");
+
+            string contentType = GetContentType("404.html");
+            string header = $"HTTP/1.1 404 Not Found\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
+            stream.Write(Encoding.UTF8.GetBytes(header));
+            stream.Write(body);
+        }
+    } 
+
 
     else if (method == "POST")
     {
