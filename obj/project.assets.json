@@ -8,24 +8,26 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Claudia\\.nuget\\packages\\": {}
+    "C:\\Users\\edgar\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Proyectos\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj",
+      "projectUniqueName": "C:\\Users\\edgar\\Desktop\\tp redes\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj",
       "projectName": "SimpleWebServer",
-      "projectPath": "C:\\Proyectos\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj",
-      "packagesPath": "C:\\Users\\Claudia\\.nuget\\packages\\",
-      "outputPath": "C:\\Proyectos\\TP-Programacion-sobre-redes\\obj\\",
+      "projectPath": "C:\\Users\\edgar\\Desktop\\tp redes\\TP-Programacion-sobre-redes\\SimpleWebServer.csproj",
+      "packagesPath": "C:\\Users\\edgar\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\edgar\\Desktop\\tp redes\\TP-Programacion-sobre-redes\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Claudia\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\edgar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
