@@ -1,0 +1,7 @@
+[08/11/2025 18:02:56] ::1 - POST /index.html - Body: nombre=Claudia&mensaje=Hola
+[08/11/2025 18:03:31] ::1 - GET /index.html
+[08/11/2025 18:03:31] ::1 - GET /style.css
+[08/11/2025 18:03:31] ::1 - GET /_con.png
+[08/11/2025 18:03:35] ::1 - GET /sd
+[08/11/2025 18:03:35] ::1 - GET /sd - Body: Archivo no encontrado
+[08/11/2025 18:03:35] ::1 - GET /style.css

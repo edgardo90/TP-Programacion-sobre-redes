@@ -1,10 +1,95 @@
 body {
-    background-color: #faf3d9;
     font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 50px;
+    padding: 20px;
+    background: #f5f7fa;
 }
 
 h1 {
-    color: #c4438a;
+    color: #03466F;
+}
+
+img {
+    width: 200px;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.buttons-container {
+    margin-bottom: 20px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #029CDC;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #03466F;
+}
+
+button.active {
+    background: #FFB703;
+    color: #03466F;
+    font-weight: bold;
+}
+
+/* Contenedor general */
+#queryDisplay {
+    background-color: #f0f8ff; /* celeste muy claro */
+    border: 2px solid #029cdc; /* borde celeste vibrante */
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Título de cada sección */
+#queryDisplay strong {
+    color: #03466f; /* azul profundo */
+}
+
+/* Query actual */
+#currentQuery {
+    display: inline-block;
+    margin-left: 10px;
+    color: #ff7f50; /* naranja/corallo para resaltar */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Historial de queries */
+#history {
+    margin-top: 15px;
+}
+
+/* Lista del historial */
+#queryHistory {
+    margin-top: 5px;
+    padding-left: 20px;
+    max-height: 150px; /* scroll si hay muchas entradas */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+/* Cada item de la lista */
+#queryHistory li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95em;
+    color: #333;
+}
+
+/* Último item sin border */
+#queryHistory li:last-child {
+    border-bottom: none;
 }

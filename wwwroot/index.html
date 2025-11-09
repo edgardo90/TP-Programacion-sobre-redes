@@ -1,14 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Servidor Web</title>
-
+    <title>Servidor Web - Panel Interactivo</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
-    <h1>¡Hola! Este archivo está siendo servido por tu servidor web en C#!</h1>
-    <img src="_con.png" alt="Un gatito" width="200">
+    <h1>¡Hola! Servidor Web en C#</h1>
+
+    <!-- Imagen -->
+    <img src="_con.png" alt="Un perrito">
+
+    <!-- Botones de descarga -->
+    <div class="buttons-container">
+        <button id="btnGzip" onclick="download('gzip', this)">Descargar .GZ</button>
+        <button id="btnSiteZip" onclick="download('sitezip', this)">Descargar archivo .ZIP</button>
+    </div>
+
+    <!-- Área para mostrar query -->
+    <div id="queryDisplay">
+        <strong>Query actual:</strong> <span id="currentQuery">(ninguna)</span>
+        <div id="history">
+            <strong>Historial de queries:</strong>
+            <ul id="queryHistory"></ul>
+        </div>
+    </div>
+
+    <script>
+        const currentQueryEl = document.getElementById('currentQuery');
+        const historyEl = document.getElementById('queryHistory');
+
+        function download(type, button) {
+            const query = `?download=${type}`;
+            currentQueryEl.textContent = query;
+
+            const li = document.createElement('li');
+            li.textContent = query;
+            historyEl.appendChild(li);
+
+            document.querySelectorAll('.buttons-container button').forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            history.replaceState({}, '', query);
+            window.location.href = query;
+        }
+
+        window.addEventListener('load', () => {
+            const qs = window.location.search;
+            if (qs) {
+                currentQueryEl.textContent = qs;
+                const li = document.createElement('li');
+                li.textContent = qs;
+                historyEl.appendChild(li);
+
+                if (qs.includes('gzip')) document.getElementById('btnGzip').classList.add('active');
+                if (qs.includes('zip')) document.getElementById('btnZip').classList.add('active');
+                if (qs.includes('sitezip')) document.getElementById('btnSiteZip').classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>
