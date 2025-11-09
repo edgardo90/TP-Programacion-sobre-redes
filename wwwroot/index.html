@@ -6,58 +6,50 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<header>
     <h1>¡Hola! Servidor Web en C#</h1>
+</header>
 
-    <!-- Imagen -->
-    <img src="_con.png" alt="Un perrito">
+<main>
+    <!-- Imágenes con etiquetas de formato -->
+    <section class="images">
+        <figure>
+            <img src="_con.png" alt="Un perrito">
+            <figcaption>PNG</figcaption>
+        </figure>
+        <figure>
+            <img src="1-1.webp" alt="Veterinaria">
+            <figcaption>WEBP</figcaption>
+        </figure>
+        <figure>
+            <img src="4x.ico" alt="Meme">
+            <figcaption>ICO</figcaption>
+        </figure>
+    </section>
 
-    <!-- Botones de descarga -->
-    <div class="buttons-container">
-        <button id="btnGzip" onclick="download('gzip', this)">Descargar .GZ</button>
-        <button id="btnSiteZip" onclick="download('sitezip', this)">Descargar archivo .ZIP</button>
-    </div>
-
-    <!-- Área para mostrar query -->
-    <div id="queryDisplay">
-        <strong>Query actual:</strong> <span id="currentQuery">(ninguna)</span>
-        <div id="history">
-            <strong>Historial de queries:</strong>
-            <ul id="queryHistory"></ul>
+    <!-- Descargas -->
+    <section class="downloads">
+        <h2>Descargas</h2>
+        <div class="buttons-container">
+            <button id="btnGzip">Descargar .GZ</button>
+            <button id="btnSiteZip">Descargar archivo .ZIP</button>
         </div>
-    </div>
+    </section>
 
-    <script>
-        const currentQueryEl = document.getElementById('currentQuery');
-        const historyEl = document.getElementById('queryHistory');
+    <!-- Query display -->
+    <section class="query-display">
+        <h2>Query actual</h2>
+        <p id="currentQuery">(ninguna)</p>
+        <h3>Historial de queries:</h3>
+        <div id="queryHistory" class="card-container"></div>
+    </section>
+</main>
 
-        function download(type, button) {
-            const query = `?download=${type}`;
-            currentQueryEl.textContent = query;
+<footer>
+    <p>Servidor Web en C# - Proyecto educativo</p>
+</footer>
 
-            const li = document.createElement('li');
-            li.textContent = query;
-            historyEl.appendChild(li);
-
-            document.querySelectorAll('.buttons-container button').forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
-
-            history.replaceState({}, '', query);
-            window.location.href = query;
-        }
-
-        window.addEventListener('load', () => {
-            const qs = window.location.search;
-            if (qs) {
-                currentQueryEl.textContent = qs;
-                const li = document.createElement('li');
-                li.textContent = qs;
-                historyEl.appendChild(li);
-
-                if (qs.includes('gzip')) document.getElementById('btnGzip').classList.add('active');
-                if (qs.includes('zip')) document.getElementById('btnZip').classList.add('active');
-                if (qs.includes('sitezip')) document.getElementById('btnSiteZip').classList.add('active');
-            }
-        });
-    </script>
+<script src="script.js"></script>
 </body>
 </html>

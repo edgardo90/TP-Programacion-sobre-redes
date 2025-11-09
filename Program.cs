@@ -4,19 +4,44 @@ using System.Text;
 using System.Text.Json;
 using System.IO.Compression;
 using System.Linq;
+using System.Collections.Concurrent;
+using System.IO;
 
-// --- Función de logging ---
+// Cola de logs compartida
+ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
+bool loggingActive = true;
+
+// Tarea que escribe los logs en disco continuamente
+Task.Run(async () =>
+{
+    while (loggingActive || !logQueue.IsEmpty)
+    {
+        if (logQueue.TryDequeue(out string logLine))
+        {
+            string date = DateTime.Now.ToString("yyyy-MM-dd");
+            string logFile = Path.Combine(Directory.GetCurrentDirectory(), $"{date}.log");
+
+            using (var stream = new FileStream(logFile, FileMode.Append, FileAccess.Write, FileShare.Read))
+            using (var writer = new StreamWriter(stream))
+            {
+                await writer.WriteLineAsync(logLine);
+            }
+        }
+        else
+        {
+            await Task.Delay(50); // Pequeño descanso si la cola está vacía
+        }
+    }
+});
+
+// --- Función para registrar logs ---
 void LogRequest(string clientIp, string method, string path, string body = "")
 {
-    string date = DateTime.Now.ToString("yyyy-MM-dd");
-    string logFile = Path.Combine(Directory.GetCurrentDirectory(), $"{date}.log");
-
     string logLine = $"[{DateTime.Now}] {clientIp} - {method} {path}";
     if (!string.IsNullOrEmpty(body))
         logLine += $" - Body: {body}";
-    logLine += "\n";
 
-    File.AppendAllText(logFile, logLine);
+    logQueue.Enqueue(logLine); // Solo encolamos, no escribimos directo
 }
 
 // --- Funciones de compresión ---
@@ -64,10 +89,11 @@ string GetContentType(string filePath)
 string configText = File.ReadAllText("config.json");
 using var json = JsonDocument.Parse(configText);
 var root = json.RootElement;
-string host = root.GetProperty("host").GetString()!;
+
+string host = root.GetProperty("host").GetString() ?? "localhost";
 int port = root.GetProperty("port").GetInt32();
-string wwwroot = root.GetProperty("wwwroot").GetString()!;
-string welcomeFile = root.GetProperty("welcomeFile").GetString()!;
+string wwwroot = root.GetProperty("wwwroot").GetString() ?? "wwwroot";
+string welcomeFile = root.GetProperty("welcomeFile").GetString() ?? "index.html";
 
 // --- Resolver host a IP (soporta "localhost") ---
 IPHostEntry entry = Dns.GetHostEntry(host);
@@ -80,16 +106,22 @@ Console.WriteLine($"Servidor escuchando en http://{host}:{port}/ ...");
 
 while (true)
 {
-    try
+    TcpClient client = await server.AcceptTcpClientAsync(); // aceptar cliente
+    TcpClient capturedClient = client; 
+
+    _ = Task.Run(async () =>
     {
-        TcpClient client = await server.AcceptTcpClientAsync();
-        _ = HandleClientAsync(client);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error aceptando cliente: {ex.Message}");
-    }
+        try
+        {
+            await HandleClientAsync(capturedClient); 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error manejando cliente: " + ex.Message);
+        }
+    });
 }
+
 
 // --- Manejo de cliente asincrónico ---
 async Task HandleClientAsync(TcpClient client)

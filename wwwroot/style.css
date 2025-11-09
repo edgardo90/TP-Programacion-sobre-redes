@@ -1,95 +1,106 @@
+/* Reset y fuente */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa; /* gris muy claro */
+    color: #2E3A59; /* azul oscuro suave */
+    text-align: center;
 }
 
-h1 {
-    color: #03466F;
-}
+/* Encabezados */
+h1 { color: #03466F; margin: 20px 0; } /* azul profundo */
+h2 { color: #029CDC; margin-bottom: 10px; } /* celeste vibrante */
+h3 { margin-top: 15px; color: #2E3A59; }
 
-img {
-    width: 200px;
-    display: block;
-    margin-bottom: 20px;
+/* Imágenes con etiqueta */
+.images {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
 }
-
-.buttons-container {
-    margin-bottom: 20px;
+.images figure {
+    text-align: center;
 }
-
-button {
-    margin: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    background: #029CDC;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    transition: background 0.2s;
+.images img {
+    width: 120px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
-
-button:hover {
-    background: #03466F;
+.images img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
-
-button.active {
-    background: #FFB703;
-    color: #03466F;
+.images figcaption {
+    margin-top: 5px;
     font-weight: bold;
+    color: #FFB703; /* naranja pastel */
 }
 
-/* Contenedor general */
-#queryDisplay {
-    background-color: #f0f8ff; /* celeste muy claro */
-    border: 2px solid #029cdc; /* borde celeste vibrante */
+/* Botones */
+.buttons-container {
+    margin: 15px 0;
+}
+.buttons-container button {
+    padding: 12px 25px;
+    margin: 5px;
+    background: #029CDC; /* azul celeste */
+    color: white;
+    border: none;
     border-radius: 10px;
-    padding: 20px;
-    max-width: 500px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+.buttons-container button:hover {
+    background: #03466F; /* azul más oscuro */
+}
+.buttons-container button.active {
+    background: #FFB703; /* naranja pastel */
+    color: #03466F;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Contenedor de tarjetas de historial */
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+.card {
+    background: #ffffff;
+    padding: 12px 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Query display */
+.query-display {
     margin: 20px auto;
-    font-family: Arial, sans-serif;
+    max-width: 600px;
+    text-align: left;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Título de cada sección */
-#queryDisplay strong {
-    color: #03466f; /* azul profundo */
+/* Footer */
+footer {
+    margin: 30px 0;
+    color: #2E3A59;
 }
 
-/* Query actual */
-#currentQuery {
-    display: inline-block;
-    margin-left: 10px;
-    color: #ff7f50; /* naranja/corallo para resaltar */
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-/* Historial de queries */
-#history {
-    margin-top: 15px;
-}
-
-/* Lista del historial */
-#queryHistory {
-    margin-top: 5px;
-    padding-left: 20px;
-    max-height: 150px; /* scroll si hay muchas entradas */
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #ffffff;
-}
-
-/* Cada item de la lista */
-#queryHistory li {
-    padding: 5px 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 0.95em;
-    color: #333;
-}
-
-/* Último item sin border */
-#queryHistory li:last-child {
-    border-bottom: none;
+/* Responsive */
+@media (max-width: 600px) {
+    .images img { width: 90px; }
+    .buttons-container button { width: 100%; margin: 5px 0; }
+    .query-display { width: 90%; }
 }

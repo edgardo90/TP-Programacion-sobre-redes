@@ -299,3 +299,101 @@
 [09/11/2025 19:12:20] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
 [09/11/2025 19:12:22] 127.0.0.1 - GET /index.html
 [09/11/2025 19:12:22] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:34:12] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:13] 127.0.0.1 - GET /style.css
+[09/11/2025 19:34:13] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:34:40] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:40] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:34:42] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:42] 127.0.0.1 - GET /style.css
+[09/11/2025 19:34:43] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:44] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:34:45] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:45] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:34:46] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:46] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:34:49] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:49] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:34:50] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:50] 127.0.0.1 - GET /style.css
+[09/11/2025 19:34:51] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:51] 127.0.0.1 - GET /style.css
+[09/11/2025 19:34:53] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:53] 127.0.0.1 - GET /style.css
+[09/11/2025 19:34:54] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:54] 127.0.0.1 - GET /style.css
+[09/11/2025 19:34:54] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:34:57] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:57] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:34:59] 127.0.0.1 - GET /index.html
+[09/11/2025 19:34:59] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:39:43] 127.0.0.1 - GET /index.html
+[09/11/2025 19:39:43] 127.0.0.1 - GET /style.css
+[09/11/2025 19:39:43] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:39:43] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:39:48] 127.0.0.1 - GET /index.html
+[09/11/2025 19:39:48] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:39:49] 127.0.0.1 - GET /index.html
+[09/11/2025 19:39:49] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:48:15] 127.0.0.1 - GET /index.html
+[09/11/2025 19:48:16] 127.0.0.1 - GET /style.css
+[09/11/2025 19:48:16] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:48:16] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:48:48] 127.0.0.1 - GET /index.html
+[09/11/2025 19:48:48] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:48:50] 127.0.0.1 - GET /index.html
+[09/11/2025 19:48:50] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:49:23] 127.0.0.1 - GET /index.html
+[09/11/2025 19:49:23] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:49:33] 127.0.0.1 - GET /index.html
+[09/11/2025 19:49:33] 127.0.0.1 - GET /style.css
+[09/11/2025 19:49:33] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:49:33] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:49:33] 127.0.0.1 - GET /4x.ico
+[09/11/2025 19:49:41] 127.0.0.1 - GET /index.html
+[09/11/2025 19:49:41] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:49:43] 127.0.0.1 - GET /index.html
+[09/11/2025 19:49:43] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:53:17] 127.0.0.1 - GET /index.html
+[09/11/2025 19:53:17] 127.0.0.1 - GET /style.css
+[09/11/2025 19:53:17] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:53:17] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:53:17] 127.0.0.1 - GET /script.js
+[09/11/2025 19:53:17] 127.0.0.1 - GET /4x.ico
+[09/11/2025 19:53:21] 127.0.0.1 - GET /index.html
+[09/11/2025 19:53:21] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:53:37] 127.0.0.1 - GET /index.html
+[09/11/2025 19:53:37] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:53:49] 127.0.0.1 - GET /style.css
+[09/11/2025 19:53:49] 127.0.0.1 - GET /.well-known/appspecific/com.chrome.devtools.json
+[09/11/2025 19:53:49] 127.0.0.1 - GET /.well-known/appspecific/com.chrome.devtools.json - Body: Archivo no encontrado
+[09/11/2025 19:54:17] 127.0.0.1 - GET /index.html
+[09/11/2025 19:54:17] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:55:24] 127.0.0.1 - GET /index.html
+[09/11/2025 19:55:24] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:55:29] 127.0.0.1 - GET /index.html
+[09/11/2025 19:55:29] 127.0.0.1 - GET /style.css
+[09/11/2025 19:55:29] 127.0.0.1 - GET /script.js
+[09/11/2025 19:55:29] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:55:29] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:55:29] 127.0.0.1 - GET /4x.ico
+[09/11/2025 19:55:41] 127.0.0.1 - GET /index.html
+[09/11/2025 19:55:41] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:55:44] 127.0.0.1 - GET /index.html
+[09/11/2025 19:55:44] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:56:31] 127.0.0.1 - GET /index.html
+[09/11/2025 19:56:31] 127.0.0.1 - GET /style.css
+[09/11/2025 19:56:31] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:56:31] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:56:31] 127.0.0.1 - GET /4x.ico
+[09/11/2025 19:56:31] 127.0.0.1 - GET /script.js
+[09/11/2025 19:56:37] 127.0.0.1 - GET /index.html
+[09/11/2025 19:56:37] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:56:41] 127.0.0.1 - GET /index.html
+[09/11/2025 19:56:41] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:56:44] 127.0.0.1 - GET /index.html
+[09/11/2025 19:56:45] 127.0.0.1 - GET /style.css
+[09/11/2025 19:56:45] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:56:45] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:56:45] 127.0.0.1 - GET /4x.ico
+[09/11/2025 19:56:45] 127.0.0.1 - GET /script.js
