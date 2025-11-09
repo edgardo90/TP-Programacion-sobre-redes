@@ -290,3 +290,12 @@
 [09/11/2025 15:27:07] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
 [09/11/2025 15:27:11] 127.0.0.1 - GET /index.html
 [09/11/2025 15:27:11] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 19:12:18] 127.0.0.1 - GET /index.html
+[09/11/2025 19:12:18] 127.0.0.1 - GET /style.css
+[09/11/2025 19:12:18] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:12:18] 127.0.0.1 - GET /favicon.ico
+[09/11/2025 19:12:18] 127.0.0.1 - GET /favicon.ico - Body: Archivo no encontrado
+[09/11/2025 19:12:20] 127.0.0.1 - GET /index.html
+[09/11/2025 19:12:20] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:12:22] 127.0.0.1 - GET /index.html
+[09/11/2025 19:12:22] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip

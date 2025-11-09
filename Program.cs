@@ -80,134 +80,184 @@ Console.WriteLine($"Servidor escuchando en http://{host}:{port}/ ...");
 
 while (true)
 {
-    TcpClient client = await server.AcceptTcpClientAsync();
-    _ = HandleClientAsync(client);
+    try
+    {
+        TcpClient client = await server.AcceptTcpClientAsync();
+        _ = HandleClientAsync(client);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error aceptando cliente: {ex.Message}");
+    }
 }
 
 // --- Manejo de cliente asincrónico ---
 async Task HandleClientAsync(TcpClient client)
 {
-    using NetworkStream stream = client.GetStream();
-    byte[] buffer = new byte[4096];
-    int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
-    string requestText = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+    try
+    {
+        using NetworkStream stream = client.GetStream();
+        byte[] buffer = new byte[4096];
+        int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+        string requestText = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
-    string[] requestLines = requestText.Split("\r\n");
-    string[] parts = requestLines[0].Split(' ');
-    string method = parts[0];
-    string path = parts[1];
+        string[] requestLines = requestText.Split("\r\n");
+        string[] parts = requestLines[0].Split(' ');
+        string method = parts[0];
+        string path = parts[1];
 
-    if (path == "/") path = "/" + welcomeFile;
+        if (path == "/") path = "/" + welcomeFile;
 
-    string filePath = Path.Combine(wwwroot, path.TrimStart('/'));
-    string clientIp = ((IPEndPoint)client.Client.RemoteEndPoint!).Address.ToString();
+        string filePath = Path.Combine(wwwroot, path.TrimStart('/'));
+        string clientIp = ((IPEndPoint)client.Client.RemoteEndPoint!).Address.ToString();
 
-    if (method == "GET")
-        await HandleGetAsync(stream, path, clientIp, requestText);
-    else if (method == "POST")
-        await HandlePostAsync(stream, path, clientIp, requestText, bytesRead, buffer);
+        if (method == "GET")
+            await HandleGetAsync(stream, path, clientIp, requestText);
+        else if (method == "POST")
+            await HandlePostAsync(stream, path, clientIp, requestText, bytesRead, buffer);
 
-    client.Close();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error manejando cliente: {ex.Message}");
+        try
+        {
+            if (client.Connected)
+            {
+                byte[] errorResp = Encoding.UTF8.GetBytes(
+                    "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n"
+                );
+                await client.GetStream().WriteAsync(errorResp);
+            }
+        }
+        catch { /* Ignorar errores al enviar respuesta de error */ }
+    }
+    finally
+    {
+        client.Close(); // Siempre cerrar el cliente
+    }
 }
 
 // --- Función GET asincrónica ---
 async Task HandleGetAsync(NetworkStream stream, string path, string clientIp, string requestText)
 {
-    string pathOnly = path;
-    string query = "";
-    int qIndex = path.IndexOf('?');
-    if (qIndex >= 0)
+    try
     {
-        pathOnly = path.Substring(0, qIndex);
-        query = path.Substring(qIndex + 1);
-    }
-
-    if (pathOnly == "/") pathOnly = "/" + welcomeFile;
-    string requestedFile = Path.Combine(wwwroot, pathOnly.TrimStart('/'));
-
-    LogRequest(clientIp, "GET", pathOnly);
-    if (!string.IsNullOrEmpty(query))
-        LogRequest(clientIp, "GET", pathOnly, "Query: " + query);
-
-    bool aceptaGzip = requestText.Contains("Accept-Encoding: gzip");
-
-    // Descarga ZIP del sitio
-    if (query.Contains("download=sitezip", StringComparison.OrdinalIgnoreCase))
-    {
-        byte[] zipBytes = CreateZip(wwwroot);
-        string header =
-            $"HTTP/1.1 200 OK\r\nContent-Type: application/zip\r\n" +
-            $"Content-Disposition: attachment; filename=\"wwwroot.zip\"\r\n" +
-            $"Content-Length: {zipBytes.Length}\r\n\r\n";
-
-        await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
-        await stream.WriteAsync(zipBytes);
-        return;
-    }
-
-    if (File.Exists(requestedFile))
-    {
-        byte[] body = await File.ReadAllBytesAsync(requestedFile);
-        string contentType = GetContentType(requestedFile);
-        bool descargaGzip = query.Contains("download=gzip", StringComparison.OrdinalIgnoreCase);
-
-        if (aceptaGzip && !descargaGzip)
+        string pathOnly = path;
+        string query = "";
+        int qIndex = path.IndexOf('?');
+        if (qIndex >= 0)
         {
-            body = CompressGzip(body);
-            string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Encoding: gzip\r\nContent-Length: {body.Length}\r\n\r\n";
-            await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
-            await stream.WriteAsync(body);
+            pathOnly = path.Substring(0, qIndex);
+            query = path.Substring(qIndex + 1);
         }
-        else if (descargaGzip)
+
+        if (pathOnly == "/") pathOnly = "/" + welcomeFile;
+        string requestedFile = Path.Combine(wwwroot, pathOnly.TrimStart('/'));
+
+        LogRequest(clientIp, "GET", pathOnly);
+        if (!string.IsNullOrEmpty(query))
+            LogRequest(clientIp, "GET", pathOnly, "Query: " + query);
+
+        bool aceptaGzip = requestText.Contains("Accept-Encoding: gzip");
+
+        // Descarga ZIP del sitio
+        if (query.Contains("download=sitezip", StringComparison.OrdinalIgnoreCase))
         {
-            byte[] gz = CompressGzip(body);
+            byte[] zipBytes = CreateZip(wwwroot);
             string header =
-                $"HTTP/1.1 200 OK\r\nContent-Type: application/gzip\r\n" +
-                $"Content-Disposition: attachment; filename=\"{Path.GetFileName(requestedFile)}.gz\"\r\n" +
-                $"Content-Length: {gz.Length}\r\n\r\n";
+                $"HTTP/1.1 200 OK\r\nContent-Type: application/zip\r\n" +
+                $"Content-Disposition: attachment; filename=\"wwwroot.zip\"\r\n" +
+                $"Content-Length: {zipBytes.Length}\r\n\r\n";
+
             await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
-            await stream.WriteAsync(gz);
+            await stream.WriteAsync(zipBytes);
+            return;
+        }
+
+        if (File.Exists(requestedFile))
+        {
+            byte[] body = await File.ReadAllBytesAsync(requestedFile);
+            string contentType = GetContentType(requestedFile);
+            bool descargaGzip = query.Contains("download=gzip", StringComparison.OrdinalIgnoreCase);
+
+            if (aceptaGzip && !descargaGzip)
+            {
+                body = CompressGzip(body);
+                string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Encoding: gzip\r\nContent-Length: {body.Length}\r\n\r\n";
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
+                await stream.WriteAsync(body);
+            }
+            else if (descargaGzip)
+            {
+                byte[] gz = CompressGzip(body);
+                string header =
+                    $"HTTP/1.1 200 OK\r\nContent-Type: application/gzip\r\n" +
+                    $"Content-Disposition: attachment; filename=\"{Path.GetFileName(requestedFile)}.gz\"\r\n" +
+                    $"Content-Length: {gz.Length}\r\n\r\n";
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
+                await stream.WriteAsync(gz);
+            }
+            else
+            {
+                string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
+                await stream.WriteAsync(body);
+            }
         }
         else
         {
-            string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
+            LogRequest(clientIp, "GET", pathOnly, "Archivo no encontrado");
+            string notFoundPath = Path.Combine(wwwroot, "404.html");
+            byte[] body = File.Exists(notFoundPath) ? await File.ReadAllBytesAsync(notFoundPath) : Encoding.UTF8.GetBytes("<h1>404 - Archivo no encontrado</h1>");
+            string header = $"HTTP/1.1 404 Not Found\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {body.Length}\r\n\r\n";
             await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
             await stream.WriteAsync(body);
         }
     }
-    else
+    catch (Exception ex)
     {
-        LogRequest(clientIp, "GET", pathOnly, "Archivo no encontrado");
-        string notFoundPath = Path.Combine(wwwroot, "404.html");
-        byte[] body = File.Exists(notFoundPath) ? await File.ReadAllBytesAsync(notFoundPath) : Encoding.UTF8.GetBytes("<h1>404 - Archivo no encontrado</h1>");
-        string header = $"HTTP/1.1 404 Not Found\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {body.Length}\r\n\r\n";
-        await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
-        await stream.WriteAsync(body);
+        Console.WriteLine($"Error en GET: {ex.Message}");
+        byte[] errorResp = Encoding.UTF8.GetBytes(
+            "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n"
+        );
+        await stream.WriteAsync(errorResp);
     }
 }
 
 // --- Función POST asincrónica ---
 async Task HandlePostAsync(NetworkStream stream, string path, string clientIp, string requestText, int bytesRead, byte[] buffer)
 {
-    string[] requestLines = requestText.Split("\r\n");
-    int contentLength = 0;
-    foreach (var line in requestLines)
-        if (line.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase))
-            contentLength = int.Parse(line.Split(':')[1].Trim());
-
-    int headerEndIndex = requestText.IndexOf("\r\n\r\n") + 4;
-    string body = bytesRead > headerEndIndex ? Encoding.UTF8.GetString(buffer, headerEndIndex, bytesRead - headerEndIndex) : "";
-
-    if (body.Length < contentLength)
+    try
     {
-        int remaining = contentLength - body.Length;
-        byte[] restBuffer = new byte[remaining];
-        int read = await stream.ReadAsync(restBuffer, 0, remaining);
-        body += Encoding.UTF8.GetString(restBuffer, 0, read);
+        string[] requestLines = requestText.Split("\r\n");
+        int contentLength = 0;
+        foreach (var line in requestLines)
+            if (line.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase))
+                contentLength = int.Parse(line.Split(':')[1].Trim());
+
+        int headerEndIndex = requestText.IndexOf("\r\n\r\n") + 4;
+        string body = bytesRead > headerEndIndex ? Encoding.UTF8.GetString(buffer, headerEndIndex, bytesRead - headerEndIndex) : "";
+
+        if (body.Length < contentLength)
+        {
+            int remaining = contentLength - body.Length;
+            byte[] restBuffer = new byte[remaining];
+            int read = await stream.ReadAsync(restBuffer, 0, remaining);
+            body += Encoding.UTF8.GetString(restBuffer, 0, read);
+        }
+
+        LogRequest(clientIp, "POST", path, body);
+
+        string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+        await stream.WriteAsync(Encoding.UTF8.GetBytes(response));
     }
-
-    LogRequest(clientIp, "POST", path, body);
-
-    string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
-    await stream.WriteAsync(Encoding.UTF8.GetBytes(response));
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error en POST: {ex.Message}");
+        byte[] errorResp = Encoding.UTF8.GetBytes(
+            "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n"
+        );
+        await stream.WriteAsync(errorResp);
+    }
 }
