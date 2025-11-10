@@ -8,6 +8,8 @@ using System.Collections.Concurrent;
 using System.IO;
 
 // Cola de logs compartida
+//Se usa una cola (Queue) thread-safe donde se encolan mensajes de log.
+//Esto evita escribir en disco en medio de atender clientes (sería lento).
 ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
 bool loggingActive = true;
 
@@ -99,7 +101,7 @@ string welcomeFile = root.GetProperty("welcomeFile").GetString() ?? "index.html"
 IPHostEntry entry = Dns.GetHostEntry(host);
 IPAddress ip = entry.AddressList.First(a => a.AddressFamily == AddressFamily.InterNetwork);
 
-// --- Servidor asincrónico ---
+// --- Servidor asincrónico y escuchar conexiones---
 TcpListener server = new TcpListener(ip, port);
 server.Start();
 Console.WriteLine($"Servidor escuchando en http://{host}:{port}/ ...");
@@ -128,11 +130,17 @@ async Task HandleClientAsync(TcpClient client)
 {
     try
     {
+        //para leer/escribir datos del cliente, A través de él llega la petición HTTP que hace el navegador.
         using NetworkStream stream = client.GetStream();
+        //Se reserva un array de bytes para guardar temporalmente los datos que llegan.
         byte[] buffer = new byte[4096];
+        //ReadAsync espera a que lleguen datos desde el navegador.
+        //Guarda esos datos crudos (sin interpretar) dentro del buffer.
+        //bytesRead indica cuántos bytes se recibieron realmente.
         int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
         string requestText = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
+        //manejo del cliente
         string[] requestLines = requestText.Split("\r\n");
         string[] parts = requestLines[0].Split(' ');
         string method = parts[0];
@@ -192,7 +200,8 @@ async Task HandleGetAsync(NetworkStream stream, string path, string clientIp, st
         LogRequest(clientIp, "GET", pathOnly);
         if (!string.IsNullOrEmpty(query))
             LogRequest(clientIp, "GET", pathOnly, "Query: " + query);
-
+            
+        //Acá detectás si el navegador dijo que soporta GZIP.
         bool aceptaGzip = requestText.Contains("Accept-Encoding: gzip");
 
         // Descarga ZIP del sitio
