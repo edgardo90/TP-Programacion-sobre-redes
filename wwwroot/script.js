@@ -15,7 +15,7 @@ function download(type, button) {
     currentQueryEl.textContent = query;
 
     const card = createCard(query);
-    historyEl.prepend(card); // prepend para que la más reciente quede arriba
+    historyEl.prepend(card); 
 
     // Guardar historial en localStorage
     localStorage.setItem('queryHistory', historyEl.innerHTML);
@@ -49,4 +49,20 @@ window.addEventListener('load', () => {
         if (qs.includes('gzip')) document.getElementById('btnGzip').classList.add('active');
         if (qs.includes('sitezip')) document.getElementById('btnSiteZip').classList.add('active');
     }
+});
+
+
+document.getElementById("postForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const data = document.getElementById("postInput").value;
+
+    await fetch("/enviar", {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: data
+    });
+
+    document.getElementById("lastPostResponse").textContent = "Último POST: " + data;
+    document.getElementById("postInput").value = "";
 });

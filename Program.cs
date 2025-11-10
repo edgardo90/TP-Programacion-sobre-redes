@@ -138,7 +138,9 @@ async Task HandleClientAsync(TcpClient client)
         string method = parts[0];
         string path = parts[1];
 
-        if (path == "/") path = "/" + welcomeFile;
+        // ✅ Solo redirigir "/" a index.html si es GET
+        if (method == "GET" && path == "/")
+            path = "/" + welcomeFile;
 
         string filePath = Path.Combine(wwwroot, path.TrimStart('/'));
         string clientIp = ((IPEndPoint)client.Client.RemoteEndPoint!).Address.ToString();
@@ -213,15 +215,19 @@ async Task HandleGetAsync(NetworkStream stream, string path, string clientIp, st
             string contentType = GetContentType(requestedFile);
             bool descargaGzip = query.Contains("download=gzip", StringComparison.OrdinalIgnoreCase);
 
+            //navegador
             if (aceptaGzip && !descargaGzip)
             {
+                Console.WriteLine($"ingresando al primer if");
                 body = CompressGzip(body);
                 string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Encoding: gzip\r\nContent-Length: {body.Length}\r\n\r\n";
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
                 await stream.WriteAsync(body);
             }
+            //usuario
             else if (descargaGzip)
             {
+                Console.WriteLine($"ingresando al else if(descargar)");
                 byte[] gz = CompressGzip(body);
                 string header =
                     $"HTTP/1.1 200 OK\r\nContent-Type: application/gzip\r\n" +
@@ -230,8 +236,10 @@ async Task HandleGetAsync(NetworkStream stream, string path, string clientIp, st
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
                 await stream.WriteAsync(gz);
             }
+            //navegador no acepta gzip
             else
             {
+                Console.WriteLine($"no hace nada");
                 string header = $"HTTP/1.1 200 OK\r\nContent-Type: {contentType}\r\nContent-Length: {body.Length}\r\n\r\n";
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(header));
                 await stream.WriteAsync(body);
@@ -250,6 +258,7 @@ async Task HandleGetAsync(NetworkStream stream, string path, string clientIp, st
     catch (Exception ex)
     {
         Console.WriteLine($"Error en GET: {ex.Message}");
+        LogRequest(clientIp, "Error", "");
         byte[] errorResp = Encoding.UTF8.GetBytes(
             "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n"
         );
@@ -280,6 +289,8 @@ async Task HandlePostAsync(NetworkStream stream, string path, string clientIp, s
         }
 
         LogRequest(clientIp, "POST", path, body);
+        Console.WriteLine($"POST recibido desde {clientIp}, Path: {path}, Body: {body}");
+
 
         string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
         await stream.WriteAsync(Encoding.UTF8.GetBytes(response));

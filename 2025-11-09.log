@@ -397,3 +397,17 @@
 [09/11/2025 19:56:45] 127.0.0.1 - GET /1-1.webp
 [09/11/2025 19:56:45] 127.0.0.1 - GET /4x.ico
 [09/11/2025 19:56:45] 127.0.0.1 - GET /script.js
+[09/11/2025 19:59:28] 127.0.0.1 - GET /index.html
+[09/11/2025 19:59:28] 127.0.0.1 - GET /style.css
+[09/11/2025 19:59:28] 127.0.0.1 - GET /4x.ico
+[09/11/2025 19:59:28] 127.0.0.1 - GET /_con.png
+[09/11/2025 19:59:28] 127.0.0.1 - GET /1-1.webp
+[09/11/2025 19:59:28] 127.0.0.1 - GET /script.js
+[09/11/2025 19:59:43] 127.0.0.1 - GET /index.html
+[09/11/2025 19:59:43] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 19:59:46] 127.0.0.1 - GET /index.html
+[09/11/2025 19:59:46] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
+[09/11/2025 20:00:04] 127.0.0.1 - GET /index.html
+[09/11/2025 20:00:04] 127.0.0.1 - GET /index.html - Body: Query: download=gzip
+[09/11/2025 20:00:05] 127.0.0.1 - GET /index.html
+[09/11/2025 20:00:05] 127.0.0.1 - GET /index.html - Body: Query: download=sitezip
