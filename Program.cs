@@ -41,7 +41,7 @@ void LogRequest(string clientIp, string method, string path, string body = "")
 {
     string logLine = $"[{DateTime.Now}] {clientIp} - {method} {path}";
     if (!string.IsNullOrEmpty(body))
-        logLine += $" - Error: {body}";
+        logLine += $" - Body: {body}";
 
     logQueue.Enqueue(logLine); // Solo encolamos, no escribimos directo
 }
