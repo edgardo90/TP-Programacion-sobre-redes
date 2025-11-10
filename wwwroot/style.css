@@ -104,3 +104,58 @@ footer {
     .buttons-container button { width: 100%; margin: 5px 0; }
     .query-display { width: 90%; }
 }
+
+/* post */
+/* Formulario POST */
+#postForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 320px;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#postForm input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #aac4d1;
+    font-size: 15px;
+    color: #03466F; /* azul profundo */
+}
+
+#postForm input:focus {
+    outline: none;
+    border-color: #029CDC; /* celeste vibrante */
+    box-shadow: 0 0 5px rgba(2,156,220,0.5);
+}
+
+#postForm button {
+    padding: 10px;
+    background-color: #029CDC; /* mismo estilo de tus botones */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background .3s;
+}
+
+#postForm button:hover {
+    background-color: #03466F; /* azul oscuro */
+}
+
+/* Caja donde se muestra el último POST */
+#lastPostResponse {
+    margin: 15px auto;
+    max-width: 320px;
+    padding: 10px 15px;
+    background: #e8f5e9;
+    border-left: 6px solid #4caf50;
+    border-radius: 10px;
+    font-weight: bold;
+}
